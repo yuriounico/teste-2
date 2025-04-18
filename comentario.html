@@ -10,6 +10,7 @@
       font-family: "Courier New", monospace;
       text-align: center;
       padding: 30px;
+      transition: transform 0.1s ease-in-out;
     }
     input, textarea {
       width: 80%;
@@ -45,6 +46,16 @@
       content: "⚠️ ";
       font-size: 20px;
       margin-right: 10px;
+    }
+    .shake {
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0% { transform: translate(0px, 0px); }
+      25% { transform: translate(4px, 0px); }
+      50% { transform: translate(-4px, 0px); }
+      75% { transform: translate(4px, 0px); }
+      100% { transform: translate(0px, 0px); }
     }
   </style>
 </head>
@@ -92,28 +103,31 @@
         const diasRestantes = Math.ceil((tempoRestante - Date.now()) / (1000 * 60 * 60 * 24));
         document.getElementById("aviso").style.display = "block";
         document.getElementById("dias-restantes").innerText = diasRestantes;
+
+        // Ativa tremor na tela
+        document.body.classList.add("shake");
+        setTimeout(() => {
+          document.body.classList.remove("shake");
+        }, 400);
+
         return;
       }
 
-      // Se nome ou mensagem estão vazios
       if (!nome || !mensagem) {
         alert("Preencha nome e comentário.");
         return;
       }
 
-      // Adicionando novo comentário
       const novoComentario = { nome, mensagem };
       comentarios.push(novoComentario);
       localStorage.setItem("comentarios", JSON.stringify(comentarios));
 
-      // Atualizando tempo de bloqueio de 30 dias
       const dataAtual = Date.now();
-      const dataFutura = dataAtual + (30 * 24 * 60 * 60 * 1000); // 30 dias em milissegundos
+      const dataFutura = dataAtual + (30 * 24 * 60 * 60 * 1000);
       localStorage.setItem("comentarioEnviado", "true");
       localStorage.setItem("tempoRestante", dataFutura);
 
       mostrarComentarios();
-      alert("Comentário enviado com sucesso!");
     }
 
     mostrarComentarios();
@@ -121,4 +135,5 @@
 
 </body>
 </html>
+
 
