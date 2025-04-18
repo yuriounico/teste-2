@@ -32,16 +32,13 @@
       background-color: #111111;
       border-left: 3px solid #00ff00;
     }
-    .erro {
-      animation: tremor 0.5s ease-in-out;
+    .aviso {
       color: red;
+      font-weight: bold;
+      margin-top: 10px;
     }
-    @keyframes tremor {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-      100% { transform: translateX(0); }
+    .comentario input, .comentario textarea {
+      width: 100%;
     }
   </style>
 </head>
@@ -57,20 +54,14 @@
   <button onclick="enviarComentario()">Enviar Comentário</button>
 
   <div id="comentarios"></div>
+  <div id="aviso"></div>
 
   <script>
-    // Função para calcular a diferença em dias
-    function calcularDiasRestantes(dataUltimoComentario) {
-      const dataAtual = new Date();
-      const dataComentario = new Date(dataUltimoComentario);
-      const diffTime = dataAtual - dataComentario;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convertendo milissegundos para dias
-      return diffDays;
-    }
+    let comentarioEnviado = localStorage.getItem("comentarioEnviado");
+    let dataUltimoComentario = localStorage.getItem("dataUltimoComentario");
+    const comentarios = JSON.parse(localStorage.getItem("comentarios")) || [];
 
-    // Função para exibir os comentários
     function mostrarComentarios() {
-      const comentarios = JSON.parse(localStorage.getItem("comentarios")) || [];
       const container = document.getElementById("comentarios");
       container.innerHTML = "<h2>📖 Comentários</h2>";
 
@@ -83,47 +74,55 @@
       });
     }
 
-    // Função para enviar o comentário
     function enviarComentario() {
       const nome = document.getElementById("nome").value.trim();
       const mensagem = document.getElementById("mensagem").value.trim();
-      const comentarioEnviado = localStorage.getItem("comentarioEnviado");
-      const dataUltimoComentario = localStorage.getItem("dataUltimoComentario");
+
+      // Verifica se o usuário já comentou dentro dos últimos 30 dias
+      if (comentarioEnviado) {
+        const diasRestantes = calcularDiasRestantes(dataUltimoComentario);
+        if (diasRestantes > 0) {
+          mostrarAviso(`Você já comentou. Volte em ${diasRestantes} dias.`);
+          return;
+        }
+      }
 
       if (!nome || !mensagem) {
         alert("Preencha nome e comentário.");
         return;
       }
 
-      if (comentarioEnviado) {
-        const diasRestantes = 30 - calcularDiasRestantes(dataUltimoComentario);
-
-        if (diasRestantes > 0) {
-          alert(`Você já comentou. Volte daqui a ${diasRestantes} dias.`);
-          document.getElementById("nome").classList.add("erro");
-          document.getElementById("mensagem").classList.add("erro");
-          return;
-        }
-      }
-
-      // Salvar novo comentário
       const novoComentario = { nome, mensagem };
-      let comentarios = JSON.parse(localStorage.getItem("comentarios")) || [];
       comentarios.push(novoComentario);
       localStorage.setItem("comentarios", JSON.stringify(comentarios));
 
-      // Atualizar o estado do comentário enviado e a data
-      localStorage.setItem("comentarioEnviado", "true");
+      // Armazenar a data do comentário
       localStorage.setItem("dataUltimoComentario", new Date().toISOString());
+      localStorage.setItem("comentarioEnviado", "true");
 
-      // Exibir os comentários atualizados
+      // Mostrar os comentários atualizados
       mostrarComentarios();
-
-      alert("Comentário enviado com sucesso!");
+      mostrarAviso(""); // Limpar o aviso
     }
 
-    // Verificar os comentários salvos ao carregar a página
-    mostrarComentarios();
+    function calcularDiasRestantes(dataUltimoComentario) {
+      const hoje = new Date();
+      const ultimaData = new Date(dataUltimoComentario);
+      const diasDiferenca = Math.floor((hoje - ultimaData) / (1000 * 60 * 60 * 24)); // Calcula a diferença de dias
+      return 30 - diasDiferenca; // Retorna a quantidade de dias restantes para poder comentar
+    }
+
+    function mostrarAviso(mensagem) {
+      const avisoElement = document.getElementById("aviso");
+      avisoElement.innerText = mensagem;
+      if (mensagem) {
+        avisoElement.style.color = "red";
+      } else {
+        avisoElement.style.color = "green";
+      }
+    }
+
+    mostrarComentarios(); // Carregar os comentários ao iniciar
 
   </script>
 
