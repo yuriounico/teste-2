@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Comentário Fantasma</title>
+  <style>
+    body {
+      background-color: #000000;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      padding: 30px;
+    }
+    input, textarea {
+      width: 80%;
+      margin: 10px 0;
+      padding: 10px;
+      font-family: "Courier New", monospace;
+    }
+    #comentarios {
+      margin-top: 40px;
+      border-top: 1px dashed #00ff00;
+      padding-top: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .comentario {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #111111;
+      border-left: 3px solid #00ff00;
+    }
+    .erro {
+      animation: tremor 0.5s ease-in-out;
+      color: red;
+    }
+    @keyframes tremor {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📟 Comentário Fantasma</h1>
+  <p>Deixe um comentário anônimo. Todos podem ver. Só pode comentar uma vez a cada 30 dias.</p>
+
+  <input type="text" id="nome" placeholder="Seu apelido ou codinome">
+  <br>
+  <textarea id="mensagem" rows="4" placeholder="Seu comentário"></textarea>
+  <br>
+  <button onclick="enviarComentario()">Enviar Comentário</button>
+
+  <div id="comentarios"></div>
+
+  <script>
+    // Função para calcular a diferença em dias
+    function calcularDiasRestantes(dataUltimoComentario) {
+      const dataAtual = new Date();
+      const dataComentario = new Date(dataUltimoComentario);
+      const diffTime = dataAtual - dataComentario;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convertendo milissegundos para dias
+      return diffDays;
+    }
+
+    // Função para exibir os comentários
+    function mostrarComentarios() {
+      const comentarios = JSON.parse(localStorage.getItem("comentarios")) || [];
+      const container = document.getElementById("comentarios");
+      container.innerHTML = "<h2>📖 Comentários</h2>";
+
+      comentarios.forEach(c => {
+        container.innerHTML += `
+          <div class="comentario">
+            <strong>${c.nome}</strong>: ${c.mensagem}
+          </div>
+        `;
+      });
+    }
+
+    // Função para enviar o comentário
+    function enviarComentario() {
+      const nome = document.getElementById("nome").value.trim();
+      const mensagem = document.getElementById("mensagem").value.trim();
+      const comentarioEnviado = localStorage.getItem("comentarioEnviado");
+      const dataUltimoComentario = localStorage.getItem("dataUltimoComentario");
+
+      if (!nome || !mensagem) {
+        alert("Preencha nome e comentário.");
+        return;
+      }
+
+      if (comentarioEnviado) {
+        const diasRestantes = 30 - calcularDiasRestantes(dataUltimoComentario);
+
+        if (diasRestantes > 0) {
+          alert(`Você já comentou. Volte daqui a ${diasRestantes} dias.`);
+          document.getElementById("nome").classList.add("erro");
+          document.getElementById("mensagem").classList.add("erro");
+          return;
+        }
+      }
+
+      // Salvar novo comentário
+      const novoComentario = { nome, mensagem };
+      let comentarios = JSON.parse(localStorage.getItem("comentarios")) || [];
+      comentarios.push(novoComentario);
+      localStorage.setItem("comentarios", JSON.stringify(comentarios));
+
+      // Atualizar o estado do comentário enviado e a data
+      localStorage.setItem("comentarioEnviado", "true");
+      localStorage.setItem("dataUltimoComentario", new Date().toISOString());
+
+      // Exibir os comentários atualizados
+      mostrarComentarios();
+
+      alert("Comentário enviado com sucesso!");
+    }
+
+    // Verificar os comentários salvos ao carregar a página
+    mostrarComentarios();
+
+  </script>
+
+</body>
+</html>
