@@ -32,19 +32,29 @@
       background-color: #111111;
       border-left: 3px solid #00ff00;
     }
-    .aviso {
+    #aviso {
       color: red;
-      font-weight: bold;
-      margin-top: 10px;
+      font-size: 18px;
+      text-align: left;
+      margin: 10px 0;
+      background-color: #222;
+      padding: 10px;
+      border-left: 5px solid red;
     }
-    .comentario input, .comentario textarea {
-      width: 100%;
+    #aviso::before {
+      content: "⚠️ ";
+      font-size: 20px;
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
 
   <h1>📟 Comentário Fantasma</h1>
+
+  <!-- Aviso de comentário já feito -->
+  <div id="aviso" style="display: none;">Você já comentou recentemente! Volte daqui a <span id="dias-restantes"></span> dias.</div>
+
   <p>Deixe um comentário anônimo. Todos podem ver. Só pode comentar uma vez a cada 30 dias.</p>
 
   <input type="text" id="nome" placeholder="Seu apelido ou codinome">
@@ -54,12 +64,11 @@
   <button onclick="enviarComentario()">Enviar Comentário</button>
 
   <div id="comentarios"></div>
-  <div id="aviso"></div>
 
   <script>
-    let comentarioEnviado = localStorage.getItem("comentarioEnviado");
-    let dataUltimoComentario = localStorage.getItem("dataUltimoComentario");
     const comentarios = JSON.parse(localStorage.getItem("comentarios")) || [];
+    const comentarioEnviado = localStorage.getItem("comentarioEnviado");
+    const tempoRestante = localStorage.getItem("tempoRestante");
 
     function mostrarComentarios() {
       const container = document.getElementById("comentarios");
@@ -78,53 +87,38 @@
       const nome = document.getElementById("nome").value.trim();
       const mensagem = document.getElementById("mensagem").value.trim();
 
-      // Verifica se o usuário já comentou dentro dos últimos 30 dias
-      if (comentarioEnviado) {
-        const diasRestantes = calcularDiasRestantes(dataUltimoComentario);
-        if (diasRestantes > 0) {
-          mostrarAviso(`Você já comentou. Volte em ${diasRestantes} dias.`);
-          return;
-        }
+      // Se já tentou comentar antes e o prazo de 30 dias não passou
+      if (comentarioEnviado && tempoRestante > Date.now()) {
+        const diasRestantes = Math.ceil((tempoRestante - Date.now()) / (1000 * 60 * 60 * 24));
+        document.getElementById("aviso").style.display = "block";
+        document.getElementById("dias-restantes").innerText = diasRestantes;
+        return;
       }
 
+      // Se nome ou mensagem estão vazios
       if (!nome || !mensagem) {
         alert("Preencha nome e comentário.");
         return;
       }
 
+      // Adicionando novo comentário
       const novoComentario = { nome, mensagem };
       comentarios.push(novoComentario);
       localStorage.setItem("comentarios", JSON.stringify(comentarios));
 
-      // Armazenar a data do comentário
-      localStorage.setItem("dataUltimoComentario", new Date().toISOString());
+      // Atualizando tempo de bloqueio de 30 dias
+      const dataAtual = Date.now();
+      const dataFutura = dataAtual + (30 * 24 * 60 * 60 * 1000); // 30 dias em milissegundos
       localStorage.setItem("comentarioEnviado", "true");
+      localStorage.setItem("tempoRestante", dataFutura);
 
-      // Mostrar os comentários atualizados
       mostrarComentarios();
-      mostrarAviso(""); // Limpar o aviso
+      alert("Comentário enviado com sucesso!");
     }
 
-    function calcularDiasRestantes(dataUltimoComentario) {
-      const hoje = new Date();
-      const ultimaData = new Date(dataUltimoComentario);
-      const diasDiferenca = Math.floor((hoje - ultimaData) / (1000 * 60 * 60 * 24)); // Calcula a diferença de dias
-      return 30 - diasDiferenca; // Retorna a quantidade de dias restantes para poder comentar
-    }
-
-    function mostrarAviso(mensagem) {
-      const avisoElement = document.getElementById("aviso");
-      avisoElement.innerText = mensagem;
-      if (mensagem) {
-        avisoElement.style.color = "red";
-      } else {
-        avisoElement.style.color = "green";
-      }
-    }
-
-    mostrarComentarios(); // Carregar os comentários ao iniciar
-
+    mostrarComentarios();
   </script>
 
 </body>
 </html>
+
