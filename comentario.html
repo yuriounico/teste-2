@@ -47,14 +47,14 @@
       margin-right: 10px;
     }
   </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
   <h1>📟 Comentário Fantasma</h1>
-
-  <!-- Aviso de comentário já feito -->
   <div id="aviso" style="display: none;">Você já comentou recentemente! Volte daqui a <span id="dias-restantes"></span> dias.</div>
-
   <p>Deixe um comentário anônimo. Todos podem ver. Só pode comentar uma vez a cada 30 dias.</p>
 
   <input type="text" id="nome" placeholder="Seu apelido ou codinome">
@@ -65,40 +65,33 @@
 
   <div id="comentarios"></div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-
   <script>
-    // Sua configuração do Firebase
+    // Firebase Configuração
     const firebaseConfig = {
       apiKey: "AIzaSyA-uuoALZSSnaJUeAt0g8kuz0IGJQt96Z8",
       authDomain: "meu-site-muglet.firebaseapp.com",
       projectId: "meu-site-muglet",
-      storageBucket: "meu-site-muglet.firebasestorage.app",
+      databaseURL: "https://meu-site-muglet-default-rtdb.firebaseio.com",
+      storageBucket: "meu-site-muglet.appspot.com",
       messagingSenderId: "662306878792",
-      appId: "1:662306878792:web:252bdd177bfe1afa4f2f7d",
-      measurementId: "G-FSY7SF6Z1Y"
+      appId: "1:662306878792:web:252bdd177bfe1afa4f2f7d"
     };
 
-    // Inicializando o Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    // Função para mostrar os comentários
     function mostrarComentarios() {
-      const comentariosRef = database.ref('comentarios');
-      comentariosRef.once('value', (snapshot) => {
-        const comentarios = snapshot.val();
-        const container = document.getElementById("comentarios");
+      const container = document.getElementById("comentarios");
+      container.innerHTML = "<h2>📖 Comentários</h2>";
+      db.ref("comentarios").on("value", (snapshot) => {
+        const data = snapshot.val();
         container.innerHTML = "<h2>📖 Comentários</h2>";
-
-        if (comentarios) {
-          for (const key in comentarios) {
-            const comentario = comentarios[key];
+        if (data) {
+          for (let id in data) {
+            const c = data[id];
             container.innerHTML += `
               <div class="comentario">
-                <strong>${comentario.nome}</strong>: ${comentario.mensagem}
+                <strong>${c.nome}</strong>: ${c.mensagem}
               </div>
             `;
           }
@@ -108,37 +101,49 @@
       });
     }
 
-    // Função para enviar um comentário para o Firebase
     function enviarComentario() {
       const nome = document.getElementById("nome").value.trim();
       const mensagem = document.getElementById("mensagem").value.trim();
 
-      // Verificando se o nome e mensagem estão preenchidos
+      const tempoRestante = localStorage.getItem("tempoRestante");
+      if (tempoRestante && Date.now() < tempoRestante) {
+        const diasRestantes = Math.ceil((tempoRestante - Date.now()) / (1000 * 60 * 60 * 24));
+        document.getElementById("aviso").style.display = "block";
+        document.getElementById("dias-restantes").innerText = diasRestantes;
+        document.body.style.animation = "shake 0.3s";
+        setTimeout(() => document.body.style.animation = "", 300);
+        return;
+      }
+
       if (!nome || !mensagem) {
         alert("Preencha nome e comentário.");
         return;
       }
 
-      const comentarioId = new Date().getTime(); // Gerando um ID único com timestamp
+      const novoComentario = { nome, mensagem, timestamp: Date.now() };
+      console.log("Enviando comentário:", novoComentario); // Verifique se os dados estão sendo enviados
+      db.ref("comentarios").push(novoComentario);
 
-      // Enviar os dados para o Firebase
-      const comentarioRef = database.ref('comentarios/' + comentarioId);
-      comentarioRef.set({
-        nome: nome,
-        mensagem: mensagem
-      })
-      .then(() => {
-        alert("Comentário enviado com sucesso!");
-        mostrarComentarios();  // Atualiza a lista de comentários
-      })
-      .catch((error) => {
-        console.error("Erro ao enviar comentário: ", error);
-      });
+      const dataFutura = Date.now() + 30 * 24 * 60 * 60 * 1000;
+      localStorage.setItem("tempoRestante", dataFutura);
+
+      document.getElementById("nome").value = "";
+      document.getElementById("mensagem").value = "";
     }
 
-    // Chama a função para mostrar os comentários ao carregar a página
     mostrarComentarios();
   </script>
 
+  <style>
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+
 </body>
 </html>
+
