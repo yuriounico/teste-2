@@ -8,14 +8,121 @@
       width: 100%;
       margin-bottom: 10px;
     }
+
+    body {
+      background-color: #000;
+      color: #00ff00;
+      font-family: "Courier New", Courier, monospace;
+      padding: 20px;
+      background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+      transition: 0.3s ease-in-out;
+    }
+
+    h1, h2 {
+      text-align: center;
+      text-shadow: 0 0 5px #00ff00;
+    }
+
+    form {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ff00;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 0 15px #00ff00;
+    }
+
+    input, textarea {
+      background-color: #111;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      font-family: monospace;
+      padding: 10px;
+      margin-bottom: 15px;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #000;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #003300;
+    }
+
+    #comentarios-section {
+      margin-top: 40px;
+      background-color: #111;
+      border: 2px solid #00ff00;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 15px #00ff00;
+    }
+
+    .comentario {
+      background-color: #000;
+      border-left: 4px solid #00ff00;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: aparecer 0.5s forwards;
+    }
+
+    @keyframes aparecer {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .comentario strong {
+      color: #66ff66;
+    }
+
+    .erro {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .erro::before {
+      content: "\26A0";
+      margin-right: 8px;
+      font-size: 20px;
+    }
+
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
   </style>
 </head>
-<body bgcolor="#cccccc" text="#000000" link="#0000ff" alink="#ff0000" vlink="#800080">
-
-  <table width="100%" height="100%" cellpadding="0" cellspacing="0" background="https://www.toptal.com/designers/subtlepatterns/patterns/pw_maze_white.png">
+<body>
+  <table width="100%" height="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td align="center" valign="top">
-
         <table width="800" cellpadding="10" cellspacing="0" border="3" bordercolor="#ff4500">
           <tr bgcolor="#ffffff">
             <td align="center">
@@ -32,7 +139,7 @@
           <tr bgcolor="#e0e0ff">
             <td align="center"><a href="#home">Home</a></td>
             <td align="center"><a href="#sobre">Sobre</a></td>
-            <td align="center"><a href="comentario.html">Comentário Fantasma</a></td>
+            <td align="center"><a href="#comentario">Comentário Fantasma</a></td>
           </tr>
         </table>
 
@@ -42,17 +149,27 @@
               <font face="Arial, sans-serif" size="+2">
                 Bem-vindo ao muglet, onde você viaja direto para a web dos anos 90!
               </font>
-
               <p>
                 <img src="https://pt.quizur.com/_image?href=https://img.quizur.com/f/img6436aecaab3073.13620384.jpg?lastEdited=1681305297&w=600&h=600&f=webp" alt="Minha Foto" border="5" width="300">
               </p>
-
-              <p>
-                <font size="+1">Explore links com estilo retrô e sinta a nostalgia!</font>
-              </p>
+              <p><font size="+1">Explore links com estilo retrô e sinta a nostalgia!</font></p>
             </td>
           </tr>
         </table>
+
+        <h1 id="comentario">Comentário Fantasma</h1>
+
+        <form id="formulario">
+          <input type="text" id="nome" placeholder="Seu nome ou apelido" required /><br>
+          <textarea id="mensagem" placeholder="Escreva seu comentário" required></textarea><br>
+          <button type="submit">Enviar</button>
+          <div id="aviso" class="erro" style="display:none;"></div>
+        </form>
+
+        <section id="comentarios-section">
+          <h2>Comentários recentes</h2>
+          <div id="comentarios"></div>
+        </section>
 
         <table width="800" cellpadding="10" cellspacing="0" border="1" bordercolor="#333333" style="margin:30px 0;">
           <tr bgcolor="#333333">
@@ -61,10 +178,71 @@
             </td>
           </tr>
         </table>
-
       </td>
     </tr>
   </table>
 
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCZ0YWz_dwC3hFPLpEK_QkI7_A_qCoJcwM",
+      authDomain: "servidor-teste-2.firebaseapp.com",
+      databaseURL: "https://servidor-teste-2-default-rtdb.firebaseio.com",
+      projectId: "servidor-teste-2",
+      storageBucket: "servidor-teste-2.firebasestorage.app",
+      messagingSenderId: "516221204635",
+      appId: "1:516221204635:web:26dcd9308f94f64eeb2e3e",
+      measurementId: "G-6NWPP471YB"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const form = document.getElementById('formulario');
+    const nome = document.getElementById('nome');
+    const mensagem = document.getElementById('mensagem');
+    const comentariosDiv = document.getElementById('comentarios');
+    const avisoDiv = document.getElementById('aviso');
+
+    const PODE_COMENTAR_APOS_MS = 1000 * 60 * 60 * 24 * 30; // 30 dias
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const ultimo = localStorage.getItem('ultimoComentario');
+      const agora = Date.now();
+
+      if (ultimo && agora - Number(ultimo) < PODE_COMENTAR_APOS_MS) {
+        const falta = Math.ceil((PODE_COMENTAR_APOS_MS - (agora - ultimo)) / (1000 * 60 * 60 * 24));
+        avisoDiv.innerHTML = `Você já comentou recentemente. Tente novamente em ${falta} dia(s).`;
+        avisoDiv.style.display = 'flex';
+        document.body.classList.add('shake');
+        setTimeout(() => document.body.classList.remove('shake'), 500);
+        return;
+      }
+
+      avisoDiv.style.display = 'none';
+
+      const comentario = {
+        nome: nome.value || "Anônimo",
+        mensagem: mensagem.value,
+        timestamp: agora
+      };
+
+      db.ref('comentarios').push(comentario);
+      localStorage.setItem('ultimoComentario', agora.toString());
+      mensagem.value = "";
+    });
+
+    db.ref('comentarios').on('child_added', (snapshot) => {
+      const c = snapshot.val();
+      if (!c) return;
+
+      const div = document.createElement('div');
+      div.className = 'comentario';
+      div.innerHTML = `<strong>${c.nome}</strong><br>${c.mensagem}`;
+      comentariosDiv.prepend(div);
+    });
+  </script>
 </body>
 </html>
