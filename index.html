@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
@@ -117,6 +117,108 @@
       75% { transform: translateX(-5px); }
       100% { transform: translateX(0); }
     }
+
+    /* Novo CSS para contador e seleção de cores */
+    .contador-caracteres {
+      text-align: right;
+      font-size: 12px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .contador-caracteres.limite {
+      color: red;
+    }
+
+    .color-picker-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .color-picker-label {
+      margin-right: 10px;
+    }
+
+    .color-picker-icon {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .color-picker {
+      display: none;
+    }
+
+    .color-preview {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #00ff00;
+      margin-left: 10px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* Modal de seleção de cor */
+    .color-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #000;
+      border: 3px solid #00ff00;
+      padding: 20px;
+      z-index: 1000;
+      box-shadow: 0 0 20px #00ff00;
+      text-align: center;
+    }
+
+    .color-modal h3 {
+      margin-top: 0;
+      color: #00ff00;
+    }
+
+    .color-options {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .color-option {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border: 2px solid #333;
+    }
+
+    .color-option:hover {
+      border: 2px solid #00ff00;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+    }
+
+    .close-modal {
+      background-color: #000;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 5px 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -137,9 +239,8 @@
 
         <table width="800" cellpadding="5" cellspacing="0" border="2" bordercolor="#0000ff" style="margin-top:10px;">
           <tr bgcolor="#e0e0ff">
-            <td align="center"><a href="#home">Home</a></td>
+            <td align="center"><a href="#">Início</a></td>
             <td align="center"><a href="#sobre">Sobre</a></td>
-            <td align="center"><a href="#comentario">Comentário Fantasma</a></td>
           </tr>
         </table>
 
@@ -149,18 +250,30 @@
               <font face="Arial, sans-serif" size="+2">
                 Bem-vindo ao muglet, onde você viaja direto para a web dos anos 90!
               </font>
-              <p>
-                <img src="https://i.pinimg.com/originals/4b/53/93/4b5393959dd2e67da43709560a22df43.gif"
-              <p><font size="+1">Explore links com estilo retrô e sinta a nostalgia!</font></p>
+              <div style="text-align: center; margin: 20px 0;">
+                <img src="https://i.pinimg.com/originals/4b/53/93/4b5393959dd2e67da43709560a22df43.gif" alt="Gif nostálgico" style="max-width: 100%; height: auto;">
+              </div>
+              <p style="text-align: center;"><font size="+1">Explore links com estilo retrô e sinta a nostalgia!</font></p>
             </td>
           </tr>
         </table>
 
-        <h1 id="comentario">Comentário Fantasma</h1>
-
         <form id="formulario">
           <input type="text" id="nome" placeholder="Seu nome ou apelido" required /><br>
-          <textarea id="mensagem" placeholder="Escreva seu comentário" required></textarea><br>
+          
+          <div class="color-picker-container">
+            <span class="color-picker-label">Cor do comentário:</span>
+            <img src="https://64.media.tumblr.com/89039978d688765290090b4c3d5f7e1d/e407752210514977-90/s540x810/a97468e29e8d4d583a3ba98b0e13085bd77a67de.png" 
+                 class="color-picker-icon" 
+                 title="Escolher cor"
+                 id="open-color-picker">
+            <div class="color-preview" id="color-preview" style="background-color:#00ff00;"></div>
+            <input type="hidden" id="cor-comentario" value="#00ff00">
+          </div>
+          
+          <textarea id="mensagem" placeholder="Escreva seu comentário (máximo 300 caracteres)" required style="color: #00ff00;"></textarea>
+          <div id="contador" class="contador-caracteres">0/300</div>
+          
           <button type="submit">Enviar</button>
           <div id="aviso" class="erro" style="display:none;"></div>
         </form>
@@ -181,6 +294,25 @@
     </tr>
   </table>
 
+  <!-- Modal de seleção de cor -->
+  <div class="modal-overlay" id="color-modal-overlay"></div>
+  <div class="color-modal" id="color-modal">
+    <h3>Escolha uma cor</h3>
+    <div class="color-options">
+      <div class="color-option" style="background-color:#00ff00;" data-color="#00ff00"></div>
+      <div class="color-option" style="background-color:#ff0000;" data-color="#ff0000"></div>
+      <div class="color-option" style="background-color:#0000ff;" data-color="#0000ff"></div>
+      <div class="color-option" style="background-color:#ffff00;" data-color="#ffff00"></div>
+      <div class="color-option" style="background-color:#ff00ff;" data-color="#ff00ff"></div>
+      <div class="color-option" style="background-color:#00ffff;" data-color="#00ffff"></div>
+      <div class="color-option" style="background-color:#ff9900;" data-color="#ff9900"></div>
+      <div class="color-option" style="background-color:#9900ff;" data-color="#9900ff"></div>
+      <div class="color-option" style="background-color:#0099ff;" data-color="#0099ff"></div>
+      <div class="color-option" style="background-color:#ff0099;" data-color="#ff0099"></div>
+    </div>
+    <button class="close-modal" id="close-color-modal">Fechar</button>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <script>
@@ -189,7 +321,7 @@
       authDomain: "servidor-teste-2.firebaseapp.com",
       databaseURL: "https://servidor-teste-2-default-rtdb.firebaseio.com",
       projectId: "servidor-teste-2",
-      storageBucket: "servidor-teste-2.firebasestorage.app",
+      storageBucket: "servidor-teste-2.appspot.com",
       messagingSenderId: "516221204635",
       appId: "1:516221204635:web:26dcd9308f94f64eeb2e3e",
       measurementId: "G-6NWPP471YB"
@@ -203,8 +335,82 @@
     const mensagem = document.getElementById('mensagem');
     const comentariosDiv = document.getElementById('comentarios');
     const avisoDiv = document.getElementById('aviso');
+    const contadorDiv = document.getElementById('contador');
+    const corComentario = document.getElementById('cor-comentario');
+    const colorPreview = document.getElementById('color-preview');
+    const openColorPicker = document.getElementById('open-color-picker');
+    const colorModal = document.getElementById('color-modal');
+    const colorModalOverlay = document.getElementById('color-modal-overlay');
+    const closeColorModal = document.getElementById('close-color-modal');
+    const colorOptions = document.querySelectorAll('.color-option');
 
     const PODE_COMENTAR_APOS_MS = 1000 * 60 * 60 * 24 * 30; // 30 dias
+    const MAX_CARACTERES = 300;
+
+    // Abrir modal de seleção de cor
+    openColorPicker.addEventListener('click', () => {
+      colorModal.style.display = 'block';
+      colorModalOverlay.style.display = 'block';
+    });
+
+    // Fechar modal
+    closeColorModal.addEventListener('click', () => {
+      colorModal.style.display = 'none';
+      colorModalOverlay.style.display = 'none';
+    });
+
+    colorModalOverlay.addEventListener('click', () => {
+      colorModal.style.display = 'none';
+      colorModalOverlay.style.display = 'none';
+    });
+
+    // Selecionar cor
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const selectedColor = option.getAttribute('data-color');
+        corComentario.value = selectedColor;
+        colorPreview.style.backgroundColor = selectedColor;
+        
+        // Aplicar cor mais clara ao texto em tempo real
+        const textColor = lightenColor(selectedColor, 30);
+        mensagem.style.color = textColor;
+        
+        colorModal.style.display = 'none';
+        colorModalOverlay.style.display = 'none';
+      });
+    });
+
+    // Contador de caracteres
+    mensagem.addEventListener('input', () => {
+      const count = mensagem.value.length;
+      contadorDiv.textContent = `${count}/${MAX_CARACTERES}`;
+      
+      if (count > MAX_CARACTERES) {
+        contadorDiv.classList.add('limite');
+        contadorDiv.style.display = 'block';
+      } else if (count > 0) {
+        contadorDiv.classList.remove('limite');
+        contadorDiv.style.display = 'block';
+      } else {
+        contadorDiv.style.display = 'none';
+      }
+    });
+
+    // Função para clarear uma cor (usada para o texto do comentário)
+    function lightenColor(color, percent) {
+      const num = parseInt(color.replace("#", ""), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      
+      return "#" + (
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)
+      ).toString(16).slice(1);
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -212,8 +418,16 @@
       const agora = Date.now();
 
       if (ultimo && agora - Number(ultimo) < PODE_COMENTAR_APOS_MS) {
-        const falta = Math.ceil((PODE_COMENTAR_APOS_MS - (agora - ultimo)) / (1000 * 60 * 60 * 24));
+        const falta = Math.ceil((PODE_COMENTAR_APOS_MS - (agora - Number(ultimo))) / (1000 * 60 * 60 * 24));
         avisoDiv.innerHTML = `Você já comentou recentemente. Tente novamente em ${falta} dia(s).`;
+        avisoDiv.style.display = 'flex';
+        document.body.classList.add('shake');
+        setTimeout(() => document.body.classList.remove('shake'), 500);
+        return;
+      }
+
+      if (mensagem.value.length > MAX_CARACTERES) {
+        avisoDiv.innerHTML = `O comentário excede o limite de ${MAX_CARACTERES} caracteres.`;
         avisoDiv.style.display = 'flex';
         document.body.classList.add('shake');
         setTimeout(() => document.body.classList.remove('shake'), 500);
@@ -222,15 +436,21 @@
 
       avisoDiv.style.display = 'none';
 
+      // Criar versão mais clara da cor para o texto do comentário
+      const corTexto = lightenColor(corComentario.value, 30);
+
       const comentario = {
         nome: nome.value || "Anônimo",
         mensagem: mensagem.value,
-        timestamp: agora
+        timestamp: agora,
+        corNome: corComentario.value,  // Cor original para o nome
+        corTexto: corTexto            // Cor clareada para o texto
       };
 
       db.ref('comentarios').push(comentario);
       localStorage.setItem('ultimoComentario', agora.toString());
       mensagem.value = "";
+      contadorDiv.style.display = 'none';
     });
 
     db.ref('comentarios').on('child_added', (snapshot) => {
@@ -239,7 +459,13 @@
 
       const div = document.createElement('div');
       div.className = 'comentario';
-      div.innerHTML = `<strong>${c.nome}</strong><br>${c.mensagem}`;
+      
+      // Aplicar as cores - nome mais forte, texto mais fraco
+      div.innerHTML = `
+        <strong style="color: ${c.corNome || '#66ff66'}">${c.nome}</strong>
+        <div style="color: ${c.corTexto || '#00ff00'}">${c.mensagem}</div>
+      `;
+      
       comentariosDiv.prepend(div);
     });
   </script>
