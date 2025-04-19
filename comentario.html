@@ -47,9 +47,8 @@
       margin-right: 10px;
     }
   </style>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -66,42 +65,39 @@
   <div id="comentarios"></div>
 
   <script>
-    // Firebase Configuração
-    const firebaseConfig = {
-      apiKey: "AIzaSyA-uuoALZSSnaJUeAt0g8kuz0IGJQt96Z8",
-      authDomain: "meu-site-muglet.firebaseapp.com",
-      projectId: "meu-site-muglet",
-      databaseURL: "https://meu-site-muglet-default-rtdb.firebaseio.com",
-      storageBucket: "meu-site-muglet.appspot.com",
-      messagingSenderId: "662306878792",
-      appId: "1:662306878792:web:252bdd177bfe1afa4f2f7d"
-    };
+    // Supabase Configuração
+    const supabaseUrl = 'https://jnazbvgrrnakvqkmesiq.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpuYXpidmdycm5ha3Zxa21lc2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwMjI1MzUsImV4cCI6MjA2MDU5ODUzNX0.rZd4qeXmNvblB9Q_iBPq-ZhxZeYtLj-_hEeisKMfOIU';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    async function mostrarComentarios() {
+      const { data, error } = await supabase
+        .from('comentarios_site')
+        .select('*');
 
-    function mostrarComentarios() {
       const container = document.getElementById("comentarios");
       container.innerHTML = "<h2>📖 Comentários</h2>";
-      db.ref("comentarios").on("value", (snapshot) => {
-        const data = snapshot.val();
-        container.innerHTML = "<h2>📖 Comentários</h2>";
-        if (data) {
-          for (let id in data) {
-            const c = data[id];
-            container.innerHTML += `
-              <div class="comentario">
-                <strong>${c.nome}</strong>: ${c.mensagem}
-              </div>
-            `;
-          }
-        } else {
-          container.innerHTML += "<p>Nenhum comentário ainda.</p>";
-        }
-      });
+
+      if (error) {
+        console.error('Erro ao buscar comentários:', error);
+        container.innerHTML += "<p>Erro ao carregar os comentários.</p>";
+        return;
+      }
+
+      if (data.length > 0) {
+        data.forEach((comentario) => {
+          container.innerHTML += `
+            <div class="comentario">
+              <strong>${comentario.nome}</strong>: ${comentario.mensagem}
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML += "<p>Nenhum comentário ainda.</p>";
+      }
     }
 
-    function enviarComentario() {
+    async function enviarComentario() {
       const nome = document.getElementById("nome").value.trim();
       const mensagem = document.getElementById("mensagem").value.trim();
 
@@ -122,13 +118,24 @@
 
       const novoComentario = { nome, mensagem, timestamp: Date.now() };
       console.log("Enviando comentário:", novoComentario); // Verifique se os dados estão sendo enviados
-      db.ref("comentarios").push(novoComentario);
+
+      // Enviando o comentário para o Supabase
+      const { data, error } = await supabase
+        .from('comentarios_site')
+        .insert([novoComentario]);
+
+      if (error) {
+        console.error('Erro ao enviar comentário:', error);
+        return;
+      }
 
       const dataFutura = Date.now() + 30 * 24 * 60 * 60 * 1000;
       localStorage.setItem("tempoRestante", dataFutura);
 
       document.getElementById("nome").value = "";
       document.getElementById("mensagem").value = "";
+
+      mostrarComentarios(); // Atualiza os comentários na tela
     }
 
     mostrarComentarios();
@@ -146,4 +153,5 @@
 
 </body>
 </html>
+
 
