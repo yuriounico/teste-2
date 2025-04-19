@@ -1,157 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Comentário Fantasma</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Inicial - Comentário Fantasma</title>
   <style>
     body {
-      background-color: #000000;
-      color: #00ff00;
-      font-family: "Courier New", monospace;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 30px;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
     }
-    input, textarea {
-      width: 80%;
-      margin: 10px 0;
-      padding: 10px;
-      font-family: "Courier New", monospace;
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px 0;
     }
-    #comentarios {
+    h1 {
+      margin: 0;
+    }
+    .content {
+      padding: 40px;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 10px 0;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    /* Estilos para a página de comentário */
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    #comentarios-section {
       margin-top: 40px;
-      border-top: 1px dashed #00ff00;
-      padding-top: 20px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 20px auto;
     }
     .comentario {
-      margin-bottom: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #333;
       padding: 10px;
-      background-color: #111111;
-      border-left: 3px solid #00ff00;
+      margin-bottom: 10px;
+      border-radius: 5px;
     }
-    #aviso {
-      color: red;
-      font-size: 18px;
-      text-align: left;
-      margin: 10px 0;
-      background-color: #222;
-      padding: 10px;
-      border-left: 5px solid red;
-    }
-    #aviso::before {
-      content: "⚠️ ";
-      font-size: 20px;
-      margin-right: 10px;
+    .comentario strong {
+      color: #444;
     }
   </style>
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
-  <h1>📟 Comentário Fantasma</h1>
-  <div id="aviso" style="display: none;">Você já comentou recentemente! Volte daqui a <span id="dias-restantes"></span> dias.</div>
-  <p>Deixe um comentário anônimo. Todos podem ver. Só pode comentar uma vez a cada 30 dias.</p>
+  <!-- Cabeçalho e botão de redirecionamento -->
+  <header>
+    <h1>Bem-vindo ao Meu Site!</h1>
+  </header>
+  <div class="content">
+    <p>Este é o conteúdo principal da página inicial. Clique no botão abaixo para ser redirecionado:</p>
+    <button onclick="window.location.href='comentarios2teste'">Clique aqui</button>
+  </div>
 
-  <input type="text" id="nome" placeholder="Seu apelido ou codinome">
-  <br>
-  <textarea id="mensagem" rows="4" placeholder="Seu comentário"></textarea>
-  <br>
-  <button onclick="enviarComentario()">Enviar Comentário</button>
+  <!-- Formulário de Comentários -->
+  <section>
+    <h1>Comentário Fantasma</h1>
+    <form id="formulario">
+      <input type="text" id="nome" placeholder="Seu nome ou apelido" required /><br><br>
+      <textarea id="mensagem" placeholder="Escreva seu comentário" required></textarea><br><br>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
 
-  <div id="comentarios"></div>
+  <!-- Seção dos comentários -->
+  <section id="comentarios-section">
+    <h2>Comentários recentes</h2>
+    <div id="comentarios"></div>
+  </section>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
   <script>
-    // Supabase Configuração
-    const supabaseUrl = 'https://jnazbvgrrnakvqkmesiq.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpuYXpidmdycm5ha3Zxa21lc2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwMjI1MzUsImV4cCI6MjA2MDU5ODUzNX0.rZd4qeXmNvblB9Q_iBPq-ZhxZeYtLj-_hEeisKMfOIU';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const firebaseConfig = {
+      apiKey: "AIzaSyCZ0YWz_dwC3hFPLpEK_QkI7_A_qCoJcwM",
+      authDomain: "servidor-teste-2.firebaseapp.com",
+      databaseURL: "https://servidor-teste-2-default-rtdb.firebaseio.com",
+      projectId: "servidor-teste-2",
+      storageBucket: "servidor-teste-2.firebasestorage.app",
+      messagingSenderId: "516221204635",
+      appId: "1:516221204635:web:26dcd9308f94f64eeb2e3e",
+      measurementId: "G-6NWPP471YB"
+    };
 
-    async function mostrarComentarios() {
-      const { data, error } = await supabase
-        .from('comentarios_site')
-        .select('*');
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-      const container = document.getElementById("comentarios");
-      container.innerHTML = "<h2>📖 Comentários</h2>";
+    const form = document.getElementById('formulario');
+    const nome = document.getElementById('nome');
+    const mensagem = document.getElementById('mensagem');
+    const comentariosDiv = document.getElementById('comentarios');
 
-      if (error) {
-        console.error('Erro ao buscar comentários:', error);
-        container.innerHTML += "<p>Erro ao carregar os comentários.</p>";
-        return;
-      }
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-      if (data.length > 0) {
-        data.forEach((comentario) => {
-          container.innerHTML += `
-            <div class="comentario">
-              <strong>${comentario.nome}</strong>: ${comentario.mensagem}
-            </div>
-          `;
-        });
-      } else {
-        container.innerHTML += "<p>Nenhum comentário ainda.</p>";
-      }
-    }
+      const comentario = {
+        nome: nome.value || "Anônimo",
+        mensagem: mensagem.value,
+        timestamp: Date.now()
+      };
 
-    async function enviarComentario() {
-      const nome = document.getElementById("nome").value.trim();
-      const mensagem = document.getElementById("mensagem").value.trim();
+      db.ref('comentarios').push(comentario);
+      mensagem.value = "";
+    });
 
-      const tempoRestante = localStorage.getItem("tempoRestante");
-      if (tempoRestante && Date.now() < tempoRestante) {
-        const diasRestantes = Math.ceil((tempoRestante - Date.now()) / (1000 * 60 * 60 * 24));
-        document.getElementById("aviso").style.display = "block";
-        document.getElementById("dias-restantes").innerText = diasRestantes;
-        document.body.style.animation = "shake 0.3s";
-        setTimeout(() => document.body.style.animation = "", 300);
-        return;
-      }
+    db.ref('comentarios').on('child_added', (snapshot) => {
+      const c = snapshot.val();
+      if (!c) return;
 
-      if (!nome || !mensagem) {
-        alert("Preencha nome e comentário.");
-        return;
-      }
-
-      const novoComentario = { nome, mensagem, timestamp: Date.now() };
-      console.log("Enviando comentário:", novoComentario); // Verifique se os dados estão sendo enviados
-
-      // Enviando o comentário para o Supabase
-      const { data, error } = await supabase
-        .from('comentarios_site')
-        .insert([novoComentario]);
-
-      if (error) {
-        console.error('Erro ao enviar comentário:', error);
-        return;
-      }
-
-      const dataFutura = Date.now() + 30 * 24 * 60 * 60 * 1000;
-      localStorage.setItem("tempoRestante", dataFutura);
-
-      document.getElementById("nome").value = "";
-      document.getElementById("mensagem").value = "";
-
-      mostrarComentarios(); // Atualiza os comentários na tela
-    }
-
-    mostrarComentarios();
+      const div = document.createElement('div');
+      div.className = 'comentario';
+      div.innerHTML = `<strong>${c.nome}</strong><br>${c.mensagem}`;
+      comentariosDiv.prepend(div);
+    });
   </script>
 
-  <style>
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-      100% { transform: translateX(0); }
-    }
-  </style>
-
+  <footer>
+    <p>© 2025 Meu Site. Todos os direitos reservados.</p>
+  </footer>
 </body>
 </html>
+
 
 
