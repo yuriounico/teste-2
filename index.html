@@ -4,314 +4,574 @@
   <meta charset="UTF-8">
   <title>Muglet</title>
   <style>
-    input, textarea {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
     body {
-      background-color: #000;
-      color: #00ff00;
-      font-family: "Courier New", Courier, monospace;
-      padding: 20px;
-      background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
-      transition: 0.3s ease-in-out;
+      background-color: #008080;
+      color: #000000;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
-    h1, h2 {
-      text-align: center;
-      text-shadow: 0 0 5px #00ff00;
-    }
-
-    form {
-      background: rgba(0, 0, 0, 0.8);
-      border: 2px solid #00ff00;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 600px;
-      margin: 0 auto;
-      box-shadow: 0 0 15px #00ff00;
-    }
-
-    input, textarea {
-      background-color: #111;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-      font-family: monospace;
-      padding: 10px;
-      margin-bottom: 15px;
-      resize: vertical;
-    }
-
-    button {
-      background-color: #000;
-      color: #00ff00;
-      border: 2px solid #00ff00;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-family: monospace;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #003300;
-    }
-
-    #comentarios-section {
-      margin-top: 40px;
-      background-color: #111;
-      border: 2px solid #00ff00;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 15px #00ff00;
-    }
-
-    .comentario {
-      background-color: #000;
-      border-left: 4px solid #00ff00;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      opacity: 0;
-      transform: translateY(-10px);
-      animation: aparecer 0.5s forwards;
-    }
-
-    @keyframes aparecer {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .comentario strong {
-      color: #66ff66;
-    }
-
-    .erro {
-      color: red;
+    a {
+      color: #0000FF;
+      text-decoration: underline;
       font-weight: bold;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .erro::before {
-      content: "\26A0";
-      margin-right: 8px;
-      font-size: 20px;
+    a:hover {
+      color: #FF00FF;
     }
 
-    .shake {
-      animation: shake 0.4s ease-in-out;
+    a:visited {
+      color: #800080;
     }
 
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-      100% { transform: translateX(0); }
+    .main-container {
+      width: 760px;
+      margin: 0 auto;
+      border: 4px outset #c0c0c0;
+      background-color: #c0c0c0;
     }
 
-    /* Novo CSS para contador e seleção de cores */
-    .contador-caracteres {
-      text-align: right;
-      font-size: 12px;
-      color: #666;
-      margin-top: -10px;
-      margin-bottom: 10px;
-      display: none;
-    }
-
-    .contador-caracteres.limite {
-      color: red;
-    }
-
-    .color-picker-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .color-picker-label {
-      margin-right: 10px;
-    }
-
-    .color-picker-icon {
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-
-    .color-picker {
-      display: none;
-    }
-
-    .color-preview {
-      width: 30px;
-      height: 30px;
-      border: 2px solid #00ff00;
-      margin-left: 10px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    /* Modal de seleção de cor */
-    .color-modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #000;
-      border: 3px solid #00ff00;
-      padding: 20px;
-      z-index: 1000;
-      box-shadow: 0 0 20px #00ff00;
+    .header {
+      background-color: #000080;
+      color: #FFFFFF;
+      padding: 10px;
       text-align: center;
     }
 
-    .color-modal h3 {
-      margin-top: 0;
-      color: #00ff00;
+    .header h1 {
+      font-family: "Comic Sans MS", cursive;
+      font-size: 36px;
+      margin: 5px;
+      color: #FFFFFF;
+    }
+
+    .navigation {
+      background-color: #c0c0c0;
+      padding: 5px;
+      text-align: center;
+      border-top: 2px solid #ffffff;
+      border-bottom: 2px solid #808080;
+    }
+
+    .nav-button {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 0 5px;
+      background-color: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      border-left: 2px solid #ffffff;
+      border-right: 2px solid #808080;
+      border-bottom: 2px solid #808080;
+      text-decoration: none;
+      color: #000000;
+    }
+
+    .nav-button:hover {
+      border-top: 2px solid #808080;
+      border-left: 2px solid #808080;
+      border-right: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .content {
+      background-color: #FFFFFF;
+      padding: 15px;
+      border: 2px inset #c0c0c0;
+    }
+
+    .win95-window {
+      border: 2px outset #c0c0c0;
+      background-color: #c0c0c0;
+      margin-bottom: 20px;
+    }
+
+    .win95-titlebar {
+      background-color: #000080;
+      color: white;
+      padding: 2px 5px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .win95-close {
+      background-color: #c0c0c0;
+      border: 1px outset #c0c0c0;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      line-height: 16px;
+      font-size: 12px;
+    }
+
+    .win95-content {
+      padding: 10px;
+      background-color: #ffffff;
+      border: 1px inset #c0c0c0;
+    }
+
+    .win95-button {
+      background-color: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      border-left: 2px solid #ffffff;
+      border-right: 2px solid #808080;
+      border-bottom: 2px solid #808080;
+      padding: 3px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    .win95-button:hover {
+      border-top: 2px solid #808080;
+      border-left: 2px solid #808080;
+      border-right: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .win95-input {
+      border: 2px inset #c0c0c0;
+      background-color: #ffffff;
+      padding: 3px;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    .win95-textarea {
+      border: 2px inset #c0c0c0;
+      background-color: #ffffff;
+      padding: 3px;
+      font-family: "MS Sans Serif", Arial, sans-serif;
+      font-size: 12px;
+      resize: none;
+    }
+
+    .counter {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 12px;
+    }
+
+    .counter span {
+      background-color: #000000;
+      color: #00FF00;
+      padding: 2px;
+      font-family: "Courier New", monospace;
+    }
+
+    .webring {
+      text-align: center;
+      margin: 10px 0;
+      background-color: #f0f0f0;
+      border: 1px solid #c0c0c0;
+      padding: 5px;
     }
 
     .color-options {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin: 15px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
     }
 
     .color-option {
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #000000;
       cursor: pointer;
-      border: 2px solid #333;
     }
 
-    .color-option:hover {
-      border: 2px solid #00ff00;
+    .blink {
+      animation: blink-animation 1s steps(2, start) infinite;
     }
 
-    .modal-overlay {
+    @keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+
+    .hit-counter {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 12px;
+    }
+
+    .hit-counter-digit {
+      display: inline-block;
+      width: 15px;
+      height: 20px;
+      background-color: #000000;
+      color: #00FF00;
+      text-align: center;
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+      margin: 0 1px;
+      padding: 2px;
+      border: 1px inset #808080;
+    }
+
+    .error-message {
+      color: #FF0000;
+      font-weight: bold;
+      text-align: center;
+      margin: 5px 0;
       display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 999;
     }
 
-    .close-modal {
-      background-color: #000;
-      color: #00ff00;
-      border: 1px solid #00ff00;
-      padding: 5px 10px;
-      cursor: pointer;
-      margin-top: 10px;
+    .comment {
+      background-color: #ffffff;
+      border: 1px solid #c0c0c0;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    .comment-name {
+      font-weight: bold;
+      color: #000080;
+    }
+
+    .guestbook {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .guestbook a {
+      display: inline-block;
+      padding: 3px 10px;
+      background-color: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      border-left: 2px solid #ffffff;
+      border-right: 2px solid #808080;
+      border-bottom: 2px solid #808080;
+      text-decoration: none;
+      color: #000000;
+      font-weight: bold;
+    }
+
+    .guestbook a:hover {
+      border-top: 2px solid #808080;
+      border-left: 2px solid #808080;
+      border-right: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .marquee-container {
+      background-color: #000080;
+      color: #ffffff;
+      padding: 5px 0;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    
+    .welcome-text {
+      font-family: "Comic Sans MS", cursive;
+      color: #800000;
+      text-align: center;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    
+    .sidebar-item {
+      margin: 10px 0;
+      text-align: center;
+    }
+    
+    .watermelon-container {
+      position: relative;
+      width: 100%;
+      text-align: center;
+      margin: 15px 0;
+      background-color: #000000;
+      padding: 10px;
+      border: 2px outset #c0c0c0;
+    }
+    
+    .watermelon-title {
+      color: #ffffff;
+      font-family: "Comic Sans MS", cursive;
+      margin-bottom: 5px;
+    }
+    
+    .sidebar-link {
+      display: block;
+      padding: 5px;
+      margin: 3px 0;
+      background-color: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      border-left: 2px solid #ffffff;
+      border-right: 2px solid #808080;
+      border-bottom: 2px solid #808080;
+      text-decoration: none;
+      color: #000000;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    .sidebar-link:hover {
+      border-top: 2px solid #808080;
+      border-left: 2px solid #808080;
+      border-right: 2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar-link img {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    
+    .sidebar-header {
+      background-color: #000080;
+      color: #ffffff;
+      padding: 3px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+      border-top: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-right: 1px solid #404040;
+      border-bottom: 1px solid #404040;
     }
   </style>
 </head>
-<body>
-  <table width="100%" height="100%" cellpadding="0" cellspacing="0">
-    <tr>
-      <td align="center" valign="top">
-        <table width="800" cellpadding="10" cellspacing="0" border="3" bordercolor="#ff4500">
-          <tr bgcolor="#ffffff">
-            <td align="center">
-              <font face="Comic Sans MS, cursive" size="+6" color="#ff4500">
-                <marquee behavior="alternate" scrollamount="5">
-                  <blink>Muglet</blink>
-                </marquee>
-              </font>
-            </td>
-          </tr>
-        </table>
+<body bgcolor="#008080" text="#000000" link="#0000FF" vlink="#800080" alink="#FF00FF">
+  <center>
+    <table width="760" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#000080">
+            <tr>
+              <td align="center">
+                <font face="Comic Sans MS, cursive" size="+3" color="#FFFFFF">
+                  Muglet
+                </font>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table width="100%" cellpadding="3" cellspacing="0" border="0" bgcolor="#c0c0c0">
+            <tr>
+              <td align="center">
+                <a href="index.html" class="nav-button">
+                  <img src="https://i.pinimg.com/originals/b1/18/16/b1181637ac80ba9e0217764ee145c379.gif" width="32" height="32" alt="Início" border="0" align="absmiddle" class="nav-icon">
+                  Início
+                </a>
+                <a href="sobre.html" class="nav-button">
+                  <img src="https://i.pinimg.com/originals/c2/e6/38/c2e638163c830cd682928efe20d86f88.gif" width="32" height="32" alt="Sobre" border="0" align="absmiddle" class="nav-icon">
+                  Sobre
+                </a>
+                <a href="links.html" class="nav-button">
+                  <img src="https://i.pinimg.com/originals/bd/91/ee/bd91eef9ab6bddd6995356f9bedbf603.gif" width="32" height="32" alt="Links" border="0" align="absmiddle" class="nav-icon">
+                  Links
+                </a>
+                <a href="contato.html" class="nav-button">
+                  <img src="https://i.pinimg.com/originals/4f/d8/12/4fd812601099f4cd71437f0ff9500895.gif" width="32" height="32" alt="Contato" border="0" align="absmiddle" class="nav-icon">
+                  Contato
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="25%" valign="top" bgcolor="#c0c0c0" style="border-right: 2px solid #808080;">
+                <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <div class="sidebar-header">LINKS LEGAIS</div>
+                      
+                      <a href="https://www.retrogames.onl/" target="_blank" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/b1/18/16/b1181637ac80ba9e0217764ee145c379.gif" width="16" height="16" alt="Jogos" border="0">
+                        Jogos Clássicos
+                      </a>
+                      
+                      <a href="#" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/c2/e6/38/c2e638163c830cd682928efe20d86f88.gif" width="16" height="16" alt="Músicas" border="0">
+                        Músicas MIDI
+                      </a>
+                      
+                      <a href="#" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/bd/91/ee/bd91eef9ab6bddd6995356f9bedbf603.gif" width="16" height="16" alt="GIFs" border="0">
+                        Gifs Animados
+                      </a>
+                      
+                      <a href="#" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/4f/d8/12/4fd812601099f4cd71437f0ff9500895.gif" width="16" height="16" alt="Wallpapers" border="0">
+                        Papéis de Parede
+                      </a>
+                      
+                      <div class="sidebar-header">FERRAMENTAS</div>
+                      
+                      <a href="#" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/46/bd/ea/46bdea1f55cc5d294a72f902b9aeb7cb.gif" width="16" height="16" alt="Chat" border="0">
+                        Chat Online
+                      </a>
+                      
+                      <a href="#" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/b1/18/16/b1181637ac80ba9e0217764ee145c379.gif" width="16" height="16" alt="Email" border="0">
+                        Webmail
+                      </a>
+                      
+                      <a href="#" class="sidebar-link">
+                        <img src="https://i.pinimg.com/originals/c2/e6/38/c2e638163c830cd682928efe20d86f88.gif" width="16" height="16" alt="Fórum" border="0">
+                        Fórum
+                      </a>
+                      
+                      <div class="watermelon-container">
+                        <div class="watermelon-title">Fruta do Mês</div>
+                        <img src="https://i.pinimg.com/originals/2025-04-19_23-35.png" alt="Melancia" style="max-width: 100%; height: auto; border: 1px solid #ffffff;">
+                        <div style="color: #ffffff; font-size: 12px; margin-top: 5px;">Melancia Retrô</div>
+                      </div>
+                      
+                      <div class="sidebar-header">VISITANTES</div>
+                      <div class="hit-counter" align="center">
+                        <p>Total de visitantes:</p>
+                        <div id="visitor-counter">
+                          <span class="hit-counter-digit">0</span>
+                          <span class="hit-counter-digit">0</span>
+                          <span class="hit-counter-digit">0</span>
+                          <span class="hit-counter-digit">0</span>
+                          <span class="hit-counter-digit">1</span>
+                        </div>
+                      </div>
+                      
+                      <div class="guestbook" style="margin-top: 15px;">
+                        <a href="guestbook.html">
+                          <img src="https://i.pinimg.com/originals/bd/91/ee/bd91eef9ab6bddd6995356f9bedbf603.gif" width="16" height="16" alt="Livro de Visitas" border="0" align="absmiddle">
+                          Livro de Visitas
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td width="75%" valign="top">
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" bgcolor="#FFFFFF">
+                  <tr>
+                    <td>
+                      <div class="win95-window">
+                        <div class="win95-titlebar">
+                          <div>Bem-vindo ao Muglet!</div>
+                          <div class="win95-close">X</div>
+                        </div>
+                        <div class="win95-content">
+                          <center>
+                            <h2 class="welcome-text">Bem-vindo ao Muglet!</h2>
+                            <p>Este site está em constante atualização!</p>
+                            <img src="https://i.pinimg.com/originals/46/bd/ea/46bdea1f55cc5d294a72f902b9aeb7cb.gif" alt="Gif nostálgico" style="max-width: 100%; height: auto;">
+                            <p>Explore links e deixe seu comentário!</p>
+                          </center>
+                        </div>
+                      </div>
 
-        <table width="800" cellpadding="5" cellspacing="0" border="2" bordercolor="#0000ff" style="margin-top:10px;">
-          <tr bgcolor="#e0e0ff">
-            <td align="center"><a href="index.html">Início</a></td>
-            <td align="center"><a href="sobre.html">Sobre</a></td>
-          </tr>
-        </table>
+                      <div class="marquee-container">
+                        <marquee scrollamount="5" behavior="scroll" direction="left">
+                          <span class="blink">★</span> Bem-vindo ao Muglet! <span class="blink">★</span> Visite todas as nossas seções! <span class="blink">★</span> Assine nosso livro de visitas! <span class="blink">★</span>
+                        </marquee>
+                      </div>
 
-        <table width="800" cellpadding="20" cellspacing="0" border="2" bordercolor="#00bfff" style="margin-top:20px;" bgcolor="#ffffe0">
-          <tr>
-            <td>
-              <font face="Arial, sans-serif" size="+2">
-                Bem-vindo ao muglet, onde você viaja direto para a web dos anos 90!
-              </font>
-              <div style="text-align: center; margin: 20px 0;">
-                <img src="https://i.pinimg.com/originals/4b/53/93/4b5393959dd2e67da43709560a22df43.gif" alt="Gif nostálgico" style="max-width: 100%; height: auto;">
-              </div>
-              <p style="text-align: center;"><font size="+1">Explore links com estilo retrô e sinta a nostalgia!</font></p>
-            </td>
-          </tr>
-        </table>
+                      <div class="webring" align="center">
+                        <a href="#">&lt;&lt; Anterior</a> |
+                        <a href="#">WebRing</a> |
+                        <a href="#">Próximo &gt;&gt;</a>
+                      </div>
 
-        <form id="formulario">
-          <input type="text" id="nome" placeholder="Seu nome ou apelido" required /><br>
-          
-          <div class="color-picker-container">
-            <span class="color-picker-label">Cor do comentário:</span>
-            <img src="https://64.media.tumblr.com/89039978d688765290090b4c3d5f7e1d/e407752210514977-90/s540x810/a97468e29e8d4d583a3ba98b0e13085bd77a67de.png" 
-                 class="color-picker-icon" 
-                 title="Escolher cor"
-                 id="open-color-picker">
-            <div class="color-preview" id="color-preview" style="background-color:#00ff00;"></div>
-            <input type="hidden" id="cor-comentario" value="#00ff00">
-          </div>
-          
-          <textarea id="mensagem" placeholder="Escreva seu comentário (máximo 300 caracteres)" required style="color: #00ff00;"></textarea>
-          <div id="contador" class="contador-caracteres">0/300</div>
-          
-          <button type="submit">Enviar</button>
-          <div id="aviso" class="erro" style="display:none;"></div>
-        </form>
+                      <div class="win95-window">
+                        <div class="win95-titlebar">
+                          <div>Deixe seu comentário</div>
+                          <div class="win95-close">X</div>
+                        </div>
+                        <div class="win95-content">
+                          <form id="formulario">
+                            <table width="100%" cellpadding="3" cellspacing="0" border="0">
+                              <tr>
+                                <td width="150"><b>Seu nome ou apelido:</b></td>
+                                <td><input type="text" id="nome" class="win95-input" style="width: 100%;" required></td>
+                              </tr>
+                              <tr>
+                                <td><b>Cor do comentário:</b></td>
+                                <td>
+                                  <div class="color-options">
+                                    <div class="color-option" style="background-color:#00ff00;" data-color="#00ff00"></div>
+                                    <div class="color-option" style="background-color:#ff0000;" data-color="#ff0000"></div>
+                                    <div class="color-option" style="background-color:#0000ff;" data-color="#0000ff"></div>
+                                    <div class="color-option" style="background-color:#ffff00;" data-color="#ffff00"></div>
+                                    <div class="color-option" style="background-color:#ff00ff;" data-color="#ff00ff"></div>
+                                  </div>
+                                  <input type="hidden" id="cor-comentario" value="#00ff00">
+                                </td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><b>Sua mensagem:</b><br>(máximo 300 caracteres)</td>
+                                <td>
+                                  <textarea id="mensagem" class="win95-textarea" style="width: 100%; height: 100px;" required></textarea>
+                                  <div id="contador" style="text-align: right; font-size: 12px;">0/300</div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td colspan="2" align="center">
+                                  <button type="submit" class="win95-button">Enviar Comentário</button>
+                                  <div id="aviso" class="error-message"></div>
+                                </td>
+                              </tr>
+                            </table>
+                          </form>
+                        </div>
+                      </div>
 
-        <section id="comentarios-section">
-          <h2>Comentários recentes</h2>
-          <div id="comentarios"></div>
-        </section>
-
-        <table width="800" cellpadding="10" cellspacing="0" border="1" bordercolor="#333333" style="margin:30px 0;">
-          <tr bgcolor="#333333">
-            <td align="center">
-              <font color="#ffffff">© 2025 Muglet - Site estilo anos 90</font>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-
-  <!-- Modal de seleção de cor -->
-  <div class="modal-overlay" id="color-modal-overlay"></div>
-  <div class="color-modal" id="color-modal">
-    <h3>Escolha uma cor</h3>
-    <div class="color-options">
-      <div class="color-option" style="background-color:#00ff00;" data-color="#00ff00"></div>
-      <div class="color-option" style="background-color:#ff0000;" data-color="#ff0000"></div>
-      <div class="color-option" style="background-color:#0000ff;" data-color="#0000ff"></div>
-      <div class="color-option" style="background-color:#ffff00;" data-color="#ffff00"></div>
-      <div class="color-option" style="background-color:#ff00ff;" data-color="#ff00ff"></div>
-      <div class="color-option" style="background-color:#00ffff;" data-color="#00ffff"></div>
-      <div class="color-option" style="background-color:#ff9900;" data-color="#ff9900"></div>
-      <div class="color-option" style="background-color:#9900ff;" data-color="#9900ff"></div>
-      <div class="color-option" style="background-color:#0099ff;" data-color="#0099ff"></div>
-      <div class="color-option" style="background-color:#ff0099;" data-color="#ff0099"></div>
-    </div>
-    <button class="close-modal" id="close-color-modal">Fechar</button>
-  </div>
+                      <div class="win95-window">
+                        <div class="win95-titlebar">
+                          <div>Comentários recentes</div>
+                          <div class="win95-close">X</div>
+                        </div>
+                        <div class="win95-content">
+                          <div id="comentarios">
+                            <div class="comment">
+                              <div class="comment-name">Webmaster</div>
+                              <div>Bem-vindo ao meu site! Deixe seu comentário!</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table width="100%" cellpadding="5" cellspacing="0" border="0" bgcolor="#000080">
+            <tr>
+              <td align="center">
+                <font color="#FFFFFF" size="-1">
+                  © 2025 Muglet - Melhor visualizado em Netscape Navigator 4.0 ou Internet Explorer 5.0<br>
+                  Resolução recomendada: 800x600
+                </font>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -337,31 +597,57 @@
     const avisoDiv = document.getElementById('aviso');
     const contadorDiv = document.getElementById('contador');
     const corComentario = document.getElementById('cor-comentario');
-    const colorPreview = document.getElementById('color-preview');
-    const openColorPicker = document.getElementById('open-color-picker');
-    const colorModal = document.getElementById('color-modal');
-    const colorModalOverlay = document.getElementById('color-modal-overlay');
-    const closeColorModal = document.getElementById('close-color-modal');
     const colorOptions = document.querySelectorAll('.color-option');
+    const closeButtons = document.querySelectorAll('.win95-close');
 
     const PODE_COMENTAR_APOS_MS = 1000 * 60 * 60 * 24 * 30; // 30 dias
     const MAX_CARACTERES = 300;
 
-    // Abrir modal de seleção de cor
-    openColorPicker.addEventListener('click', () => {
-      colorModal.style.display = 'block';
-      colorModalOverlay.style.display = 'block';
-    });
+    // Implementação do contador de visitantes real
+    function updateVisitorCounter() {
+      // Verificar se este é um novo visitante
+      const visitorId = localStorage.getItem('visitorId');
+      const now = Date.now();
+      
+      if (!visitorId) {
+        // Novo visitante - gerar ID único
+        const newVisitorId = 'visitor_' + now + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('visitorId', newVisitorId);
+        
+        // Incrementar contador no Firebase
+        db.ref('visitorCount').transaction(function(currentCount) {
+          return (currentCount || 0) + 1;
+        }).then(function(result) {
+          // Atualizar exibição do contador
+          displayVisitorCount(result.snapshot.val());
+        });
+      } else {
+        // Visitante existente - apenas obter contagem atual
+        db.ref('visitorCount').once('value').then(function(snapshot) {
+          displayVisitorCount(snapshot.val() || 1);
+        });
+      }
+    }
 
-    // Fechar modal
-    closeColorModal.addEventListener('click', () => {
-      colorModal.style.display = 'none';
-      colorModalOverlay.style.display = 'none';
-    });
+    // Exibir contagem de visitantes
+    function displayVisitorCount(count) {
+      const countStr = count.toString().padStart(5, '0');
+      const counterDigits = document.querySelectorAll('.hit-counter-digit');
+      for (let i = 0; i < 5; i++) {
+        if (i < countStr.length) {
+          counterDigits[i].textContent = countStr[i];
+        }
+      }
+    }
 
-    colorModalOverlay.addEventListener('click', () => {
-      colorModal.style.display = 'none';
-      colorModalOverlay.style.display = 'none';
+    // Botões de fechar janelas
+    closeButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const window = this.closest('.win95-window');
+        if (window) {
+          window.style.display = 'none';
+        }
+      });
     });
 
     // Selecionar cor
@@ -369,14 +655,10 @@
       option.addEventListener('click', () => {
         const selectedColor = option.getAttribute('data-color');
         corComentario.value = selectedColor;
-        colorPreview.style.backgroundColor = selectedColor;
         
-        // Aplicar cor mais clara ao texto em tempo real
-        const textColor = lightenColor(selectedColor, 30);
-        mensagem.style.color = textColor;
-        
-        colorModal.style.display = 'none';
-        colorModalOverlay.style.display = 'none';
+        // Destacar a cor selecionada
+        colorOptions.forEach(opt => opt.style.border = '1px solid #000000');
+        option.style.border = '3px solid #000000';
       });
     });
 
@@ -386,31 +668,11 @@
       contadorDiv.textContent = `${count}/${MAX_CARACTERES}`;
       
       if (count > MAX_CARACTERES) {
-        contadorDiv.classList.add('limite');
-        contadorDiv.style.display = 'block';
-      } else if (count > 0) {
-        contadorDiv.classList.remove('limite');
-        contadorDiv.style.display = 'block';
+        contadorDiv.style.color = 'red';
       } else {
-        contadorDiv.style.display = 'none';
+        contadorDiv.style.color = '#666666';
       }
     });
-
-    // Função para clarear uma cor (usada para o texto do comentário)
-    function lightenColor(color, percent) {
-      const num = parseInt(color.replace("#", ""), 16);
-      const amt = Math.round(2.55 * percent);
-      const R = (num >> 16) + amt;
-      const G = (num >> 8 & 0x00FF) + amt;
-      const B = (num & 0x0000FF) + amt;
-      
-      return "#" + (
-        0x1000000 +
-        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-        (B < 255 ? (B < 1 ? 0 : B) : 255)
-      ).toString(16).slice(1);
-    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -420,37 +682,31 @@
       if (ultimo && agora - Number(ultimo) < PODE_COMENTAR_APOS_MS) {
         const falta = Math.ceil((PODE_COMENTAR_APOS_MS - (agora - Number(ultimo))) / (1000 * 60 * 60 * 24));
         avisoDiv.innerHTML = `Você já comentou recentemente. Tente novamente em ${falta} dia(s).`;
-        avisoDiv.style.display = 'flex';
-        document.body.classList.add('shake');
-        setTimeout(() => document.body.classList.remove('shake'), 500);
+        avisoDiv.style.display = 'block';
         return;
       }
 
       if (mensagem.value.length > MAX_CARACTERES) {
         avisoDiv.innerHTML = `O comentário excede o limite de ${MAX_CARACTERES} caracteres.`;
-        avisoDiv.style.display = 'flex';
-        document.body.classList.add('shake');
-        setTimeout(() => document.body.classList.remove('shake'), 500);
+        avisoDiv.style.display = 'block';
         return;
       }
 
       avisoDiv.style.display = 'none';
 
-      // Criar versão mais clara da cor para o texto do comentário
-      const corTexto = lightenColor(corComentario.value, 30);
-
       const comentario = {
         nome: nome.value || "Anônimo",
         mensagem: mensagem.value,
         timestamp: agora,
-        corNome: corComentario.value,  // Cor original para o nome
-        corTexto: corTexto            // Cor clareada para o texto
+        corNome: corComentario.value,
+        corTexto: corComentario.value
       };
 
       db.ref('comentarios').push(comentario);
       localStorage.setItem('ultimoComentario', agora.toString());
       mensagem.value = "";
-      contadorDiv.style.display = 'none';
+      contadorDiv.textContent = "0/300";
+      nome.value = "";
     });
 
     db.ref('comentarios').on('child_added', (snapshot) => {
@@ -458,16 +714,20 @@
       if (!c) return;
 
       const div = document.createElement('div');
-      div.className = 'comentario';
+      div.className = 'comment';
       
-      // Aplicar as cores - nome mais forte, texto mais fraco
       div.innerHTML = `
-        <strong style="color: ${c.corNome || '#66ff66'}">${c.nome}</strong>
-        <div style="color: ${c.corTexto || '#00ff00'}">${c.mensagem}</div>
+        <div class="comment-name" style="color: ${c.corNome || '#000080'}">${c.nome}</div>
+        <div style="color: ${c.corTexto || '#000000'}">${c.mensagem}</div>
       `;
       
       comentariosDiv.prepend(div);
     });
+
+    // Inicializar contador de visitantes quando a página carrega
+    window.onload = function() {
+      updateVisitorCounter();
+    };
   </script>
 </body>
 </html>
